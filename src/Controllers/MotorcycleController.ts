@@ -18,6 +18,21 @@ class MotorcycleController {
     const newMotorcycle = await this.motorcycleService.insertMotocycle(this.req.body);
     return this.res.status(201).json(newMotorcycle);
   }
+
+  async getAll() {
+    const cars = await this.motorcycleService.getAll();
+    return this.res.status(200).json(cars);
+  }
+
+  async getOne() {
+    const { id } = this.req.params;
+    try {
+      const car = await this.motorcycleService.getOne(id);
+      return this.res.status(200).json(car);
+    } catch (error) {
+      this.next(error);
+    }
+  }
 }
 
 export default MotorcycleController;
