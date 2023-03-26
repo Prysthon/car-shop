@@ -30,6 +30,16 @@ class CarService {
     if (!car) throw new Error('Car not found');
     return this.createCarDomain(car);
   }
+
+  async updateOne(id: string, newCar: Partial<ICar>) {
+    if (!isValidObjectId(id)) throw new Error('Invalid mongo id');
+    const carODM = new CarODM();
+    const car = await carODM.getOne(id);
+    if (!car) throw new Error('Car not found');
+    await carODM.uploadCar(id, newCar);
+    const updatedCar = await carODM.getOne(id);
+    return this.createCarDomain(updatedCar);
+  }
 }
 
 export default CarService;
