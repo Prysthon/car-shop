@@ -5,28 +5,26 @@ import CarODM from '../Models/CarODM';
 
 class CarService {
   private createCarDomain(car: ICar | null) {
-    if (car) {
-      return new Car(car);
-    }
+    if (car) return new Car(car);
     return null;
   }
 
   async insertCar(car: ICar) {
     const carODM = new CarODM();
-    const newCar = await carODM.insertCar(car);
+    const newCar = await carODM.create(car);
     return this.createCarDomain(newCar);
   }
 
   async getAll() {
     const carODM = new CarODM();
-    const cars = await carODM.getAll();
+    const cars = await carODM.findAll();
     return cars.map((car) => this.createCarDomain(car));
   }
 
   async getOne(id: string) {
     if (!isValidObjectId(id)) throw new Error('Invalid mongo id');
     const carODM = new CarODM();
-    const car = await carODM.getOne(id);
+    const car = await carODM.findById(id);
     if (!car) throw new Error('Car not found');
     return this.createCarDomain(car);
   }
@@ -34,10 +32,9 @@ class CarService {
   async updateOne(id: string, newCar: Partial<ICar>) {
     if (!isValidObjectId(id)) throw new Error('Invalid mongo id');
     const carODM = new CarODM();
-    const car = await carODM.getOne(id);
+    const car = await carODM.findById(id);
     if (!car) throw new Error('Car not found');
-    await carODM.uploadCar(id, newCar);
-    const updatedCar = await carODM.getOne(id);
+    const updatedCar = await carODM.update(id, newCar);
     return this.createCarDomain(updatedCar);
   }
 }
