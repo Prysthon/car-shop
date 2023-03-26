@@ -62,7 +62,7 @@ describe('Unit Test to cars', function () {
           seatsQty: 5,
         },
       ];
-      sinon.stub(Model, 'create').resolves(carOutput);
+      sinon.stub(Model, 'find').resolves(carOutput);
       // Assert
       const service = new CarService();
       const result = await service.getAll();
@@ -81,7 +81,7 @@ describe('Unit Test to cars', function () {
         doorsQty: 4,
         seatsQty: 5,
       };
-      sinon.stub(Model, 'create').resolves(carOutput);
+      sinon.stub(Model, 'findById').resolves(carOutput);
       // Assert
       const service = new CarService();
       const result = await service.getOne('641c8dc67bd902871e2386df');
@@ -89,6 +89,7 @@ describe('Unit Test to cars', function () {
       expect(result).to.be.deep.equal(carOutput);
     });
     it('Should return an error if given an invalid mondo ID', async function () {
+      sinon.stub(Model, 'findById').resolves({});
       try {
         const service = new CarService();
         await service.getOne('641c8dc67bd902871e2386df');
